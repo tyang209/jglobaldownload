@@ -12,6 +12,6 @@ BOT_NAME = 'jglobalDownload'
 
 SPIDER_MODULES = ['jglobalDownload.spiders']
 NEWSPIDER_MODULE = 'jglobalDownload.spiders'
-
+CONCURRENT_REQUESTS=1
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'jglobalDownload (+http://www.yourdomain.com)'

@@ -34,7 +34,7 @@ class jglobalresearcher_spider(CrawlSpider):
 		allowed_domains = ["http://jglobal.jst.go.jp"]
 		with open('profileLinksCollection.txt','rb') as f:
 
-			self.start_urls= [url.strip() for url in f.readlines()]
+			self.start_urls= [url.strip() for url in f.readlines()][5000:]
 		with open('downloadprofilejglobalids.txt','rb') as f:
 
 			self.scraped_ids = [ids.strip() for ids in f.readlines()]
@@ -135,7 +135,7 @@ class jglobalresearcher_spider(CrawlSpider):
 				conditionFlag = False
 
 
-		driver2.close()
+		driver2.quit()
 
 	def isMoreButtonPresent(self,soup):
 		a = soup.find('img',{'src':'/common/images/btn_more.png'})
@@ -169,10 +169,6 @@ class jglobalresearcher_spider(CrawlSpider):
 		except NoSuchElementException: 
 			return False
 		return True
-
-
-
-
 
 	def writeSoupToHTML(self,soup,fileName):
 		with open('./downloadedHTML/'+fileName+'.html','wb') as f:
@@ -218,4 +214,4 @@ class jglobalresearcher_spider(CrawlSpider):
 			print 'writing %s to file' % self.JGLOBAL_ID
 			f.write(self.JGLOBAL_ID+'\n')
 
-		driver.close()
+		driver.quit()
