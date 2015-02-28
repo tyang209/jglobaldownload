@@ -32,12 +32,13 @@ class jglobalresearcher_spider(CrawlSpider):
 		self.moreButtonXpath = "//img[contains(@src,'/common/images/btn_more.png')]"
 		self.nextPagexpath = "//a[contains(@id,'JD_P_NEXT')]/img"
 		allowed_domains = ["http://jglobal.jst.go.jp"]
-		self.start_urls=[
-						# "http://jglobal.jst.go.jp/detail.php?JGLOBAL_ID=200901027338990336&q=%E4%BA%AC%E9%83%BD%E5%A4%A7%E5%AD%A6&t=1"
-						"http://jglobal.jst.go.jp/detail.php?JGLOBAL_ID=200901079241931254&q=%E4%BA%AC%E9%83%BD%E5%A4%A7%E5%AD%A6&t=1"
-						# ,"http://jglobal.jst.go.jp/detail.php?JGLOBAL_ID=200901069127676630&q=%E4%BA%AC%E9%83%BD%E5%A4%A7%E5%AD%A6&t=1"
-						# ,"http://jglobal.jst.go.jp/detail.php?JGLOBAL_ID=200901064753496323&q=%E4%BA%AC%E9%83%BD%E5%A4%A7%E5%AD%A6&t=1"
-		 				]
+		with open('profileLinksCollection.txt','rb') as f:
+
+			self.start_urls= [url.strip() for url in f.readlines()]
+		with open('downloadprofilejglobalids.txt','rb') as f:
+
+			self.scraped_ids = [ids.strip() for ids in f.readlines()]
+
 		self.DIV_IDS=	{'JD_CS_2':'Affiliation_Department',
 						'JD_CS_3': 'Job_Title',
 						'JD_CS_4': 'Other_Affiiation',
@@ -179,11 +180,17 @@ class jglobalresearcher_spider(CrawlSpider):
 
 
 	def parse(self, response):
+		self.setGlobalID(response.url)
+		
+		if self.JGLOBAL_ID in self.scraped_ids:
+			print '%s already scraped'%self.JGLOBAL_ID
+			return
+		print 'scraping'
 		driver = self.initDriver()
 		driver.get(response.url)
 		driver.set_window_size(1920, 1000)
 
-		self.setGlobalID(response.url)
+
 	
 
 
@@ -207,6 +214,8 @@ class jglobalresearcher_spider(CrawlSpider):
 				self.downloadAllAdditionlPages(link,v)
 			else:
 				continue
-
+		with open('downloadprofilejglobalids.txt','a+') as f:
+			print 'writing %s to file' % self.JGLOBAL_ID
+			f.write(self.JGLOBAL_ID)
 
 		driver.close()
