@@ -216,6 +216,6 @@ class jglobalresearcher_spider(CrawlSpider):
 				continue
 		with open('downloadprofilejglobalids.txt','a+') as f:
 			print 'writing %s to file' % self.JGLOBAL_ID
-			f.write(self.JGLOBAL_ID)
+			f.write(self.JGLOBAL_ID+'\n')
 
 		driver.close()
